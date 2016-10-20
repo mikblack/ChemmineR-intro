@@ -27,6 +27,22 @@ source("http://bioconductor.org/biocLite.R")
 biocLite("ChemmineR") 
 ```
 
+### Additional complication
+
+Additional functionality can be added to the `ChemmineR` package through the OpenBabel C++ library, accessed via 
+the `ChemmineOB` R package.  This provides extract format conversion and local peptide structure viewing capabilities.
+As described in the manual, `ChemmineR` will automatically detect whether `ChemmineOB` is installed.  To get 
+OpenBabel installed on my (Mac OS) laptop, I used the v2.3.1 zip file from:
+
+http://openbabel.org/wiki/Category:Installation
+
+and then installed the `ChemmineOB` package via:
+
+```{r eval=FALSE}
+source("http://bioconductor.org/biocLite.R")
+biocLite("ChemmineOB")
+```
+
 ### References
 
 Papers relating to this package and the assocaited "Chemmine" web service:

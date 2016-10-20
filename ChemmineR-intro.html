@@ -138,6 +138,14 @@ source(&quot;http://bioconductor.org/biocLite.R&quot;)
 ## Use biocLite to install the package
 biocLite(&quot;ChemmineR&quot;) </code></pre>
 </div>
+<div id="additional-complication" class="section level3">
+<h3>Additional complication</h3>
+<p>Additional functionality can be added to the <code>ChemmineR</code> package through the OpenBabel C++ library, accessed via the <code>ChemmineOB</code> R package. This provides extract format conversion and local peptide structure viewing capabilities. As described in the manual, <code>ChemmineR</code> will automatically detect whether <code>ChemmineOB</code> is installed. To get OpenBabel installed on my (Mac OS) laptop, I used the v2.3.1 zip file from:</p>
+<p><a href="http://openbabel.org/wiki/Category:Installation" class="uri">http://openbabel.org/wiki/Category:Installation</a></p>
+<p>and then installed the <code>ChemmineOB</code> package via:</p>
+<pre class="r"><code>source(&quot;http://bioconductor.org/biocLite.R&quot;)
+biocLite(&quot;ChemmineOB&quot;)</code></pre>
+</div>
 <div id="references" class="section level3">
 <h3>References</h3>
 <p>Papers relating to this package and the assocaited “Chemmine” web service:</p>
