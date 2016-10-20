@@ -27,7 +27,7 @@ source("http://bioconductor.org/biocLite.R")
 biocLite("ChemmineR") 
 ```
 
-## References
+### References
 
 Papers relating to this package and the assocaited "Chemmine" web service:
 

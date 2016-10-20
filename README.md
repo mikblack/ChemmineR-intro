@@ -18,7 +18,7 @@ source("http://bioconductor.org/biocLite.R")
 biocLite("ChemmineR") 
 ```
 
-## References
+### References
 
 Papers relating to this package and the assocaited "Chemmine" web service:
 
@@ -29,6 +29,8 @@ Papers relating to this package and the assocaited "Chemmine" web service:
 Bioconductor page:
 
  - https://www.bioconductor.org/packages/release/bioc/html/ChemmineR.html
+
+### R code
 
 The code and instructions for this session are contained in the ChemmineR-intro.Rmd and ChemmineR-intro.html files in this repository. Rendered HTML:
 
