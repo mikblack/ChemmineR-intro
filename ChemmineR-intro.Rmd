@@ -1,0 +1,28 @@
+---
+title: 'ChemmineR: introductory session'
+author: "Mik Black"
+date: "25 October 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This material covers a VERY basic introduction to some of the functionality provided by the `ChemmineR` package for R.
+
+It borrows heavily from: 
+
+ - http://www.bioconductor.org/packages/devel/bioc/vignettes/ChemmineR/inst/doc/ChemmineR.html
+
+### R libraries
+
+The main R package used during this session is `ChemmineR`.  You can install this via:
+
+```{r eval=FALSE}
+## Source the biocLite.R installation script
+source("http://bioconductor.org/biocLite.R") 
+
+## Use biocLite to install the package
+biocLite("ChemmineR") 
+```
