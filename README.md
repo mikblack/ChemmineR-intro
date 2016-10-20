@@ -18,3 +18,6 @@ source("http://bioconductor.org/biocLite.R")
 biocLite("ChemmineR") 
 ```
 
+The code and instructions for this session are contained in the ChemmineR-intro.Rmd and ChemmineR-intro.html files in this repository. Rendered HTML:
+
+https://rawgit.com/mikblack/twitteR-intro/master/ChemmineR-intro.html
