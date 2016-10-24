@@ -27,10 +27,10 @@ source("http://bioconductor.org/biocLite.R")
 biocLite("ChemmineR") 
 ```
 
-### Additional complication
+### Additional complication(s)
 
 Additional functionality can be added to the `ChemmineR` package through the OpenBabel C++ library, accessed via 
-the `ChemmineOB` R package.  This provides extract format conversion and local peptide structure viewing capabilities.
+the `ChemmineOB` R package.  This provides extra format conversion and local peptide structure viewing capabilities.
 As described in the manual, `ChemmineR` will automatically detect whether `ChemmineOB` is installed.  To get 
 OpenBabel installed on my (Mac OS) laptop, I used the v2.3.1 zip file from:
 
@@ -41,6 +41,13 @@ and then installed the `ChemmineOB` package via:
 ```{r eval=FALSE}
 source("http://bioconductor.org/biocLite.R")
 biocLite("ChemmineOB")
+```
+
+For comparing compounds, and performing clustering, the `fmcsR` package is needed:
+
+```{r eval=FALSE}
+source("http://bioconductor.org/biocLite.R")
+biocLite("fmcsR")
 ```
 
 ### References
@@ -55,7 +62,30 @@ Bioconductor page:
 
  - https://www.bioconductor.org/packages/release/bioc/html/ChemmineR.html
 
-### Getting started
+### A name you recognise?
+
+ - Thomas Girke is an Associate Professor in Bioinformatics at UC Riverside:   
+       - http://girke.bioinformatics.ucr.edu/
+ - He has a great page of R manuals:
+       - http://girke.bioinformatics.ucr.edu/manuals/mydoc/home.html
+ - Includes a fantastic one covering various Bioconductor functionality that I have 
+ used (and referenced) in my STAT435 lectures:
+       - http://manuals.bioinformatics.ucr.edu/home/R_BioCondManual
+       
+### The ChemMine website
+
+The ChemMine website provides a collection of tools for working with structure data from small molecules:
+  - drawing structures
+  - similarity searching
+  - clustering 
+  
+<img src="PNG/chemmine_web.png" height="550">
+
+Even cooler, all of this functionality can be accessed from within R via the ChemmineR package.
+
+#### http://chemmine.ucr.edu/
+
+### ChemmineR: Getting started
 
 Load the ChemmineR library:
 
@@ -63,4 +93,116 @@ Load the ChemmineR library:
 library(ChemmineR)
 ```
 
+and the `ChemmineOB` package if you have it installed:
 
+```{r}
+library(ChemmineOB)
+```
+
+#### Some background: data formats
+
+This data can handle molecular structure data is the following formats:
+
+ - SDF
+ - smiles
+
+Let's learn what these formats look like by loading some data.
+
+#### Importing SDF objects
+
+Import some SDF data from Thomas's web page (you can ignore the warning 
+about an "incomplete final line"):
+```{r, cache=TRUE}
+sdfset <- read.SDFset("http://faculty.ucr.edu/~tgirke/Documents/R_BioCond/Samples/sdfsample.sdf") 
+```
+
+What sort of data is it?
+```{r}
+## Class?
+class(sdfset)
+
+## Length?
+length(sdfset)
+
+## First component?
+sdfset[[1]]
+```
+
+NB: need to be a little bit careful with accessing the objects (note the different
+effect of vector-style _versus_ list-style):
+
+```{r}
+class(sdfset[1])
+sdfset[1]
+
+class(sdfset[[1]])
+sdfset[[1]]
+```
+
+This means that `sdf.visualize( sdfset[1] )` will succeed (as it requires a SDFset object),
+but `sdf.visualize( sdfset[[1]] )` will fail, since `sdfset[[1]]` is a "SDF", not a 
+"SDFset".
+
+What can we do with this information?  Let's try plotting it.  This command:
+
+```{r, eval=FALSE}
+## Opens browser window and plots structure using Chemmine web service 
+sdf.visualize( sdfset[1] )
+```
+
+will open the ChemmineR website and display the first structure in a web browser.  
+It should look like this:
+
+<img src="PNG/vis_sdf_web.png" height="100">
+
+If you have the OpenBabel package installed, the following command will plot the
+structure in R:
+
+```{r, fig.height=5, fig.width=6}
+## With the ChemmineOB package loaded (and OpenBabel installed) you can plot locally:
+plot(sdfset[1], regenCoords=TRUE, print=FALSE)
+```
+
+You can also plot multiple compounds from a SDFset:
+```{r, fig.height=7, fig.width=7}
+## With the ChemmineOB package loaded (and OpenBabel installed) you can plot locally:
+plot(sdfset[1:4], regenCoords=TRUE, print=FALSE)
+```
+
+What about the other (smiles) format?  With OpenBabel, we can do format conversion:
+
+```{r, cache=TRUE}
+smileset <- sdf2smiles(sdfset) 
+```
+
+What does this format look like?
+
+```{r}
+## 
+## Display the first smiles object
+smileset[[1]]
+```
+
+There are also functions for importing (and exporting) smiles data.
+
+## What else can we do?
+
+Who wouldn't want to identify rings?!
+
+```{r}
+ringatoms <- rings(sdfset[1], upper=Inf, type="all", arom=FALSE, inner=FALSE)
+## What did we get?
+ringatoms
+```
+
+And plot them! (rings are highlighted in red).
+```{r}
+atomindex <- as.numeric(gsub(".*_", "", unique(unlist(ringatoms))))
+atomindex
+plot(sdfset[1], print=FALSE, colbonds=atomindex) 
+```
+
+You can even plot the atoms if you want...
+```{r}
+plot(sdfset[1], print=FALSE, atomnum=TRUE, no_print_atoms="H") 
+```
