@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 This material covers a VERY basic introduction to some of the functionality provided by the `ChemmineR` package for R.
 
-It borrows heavily from: 
+It borrows (very) heavily from: 
 
  - http://www.bioconductor.org/packages/devel/bioc/vignettes/ChemmineR/inst/doc/ChemmineR.html
 
@@ -204,5 +204,115 @@ plot(sdfset[1], print=FALSE, colbonds=atomindex)
 
 You can even plot the atoms if you want...
 ```{r}
-plot(sdfset[1], print=FALSE, atomnum=TRUE, no_print_atoms="H") 
+plot(sdfset[1], print=FALSE, atomnum=TRUE, no_print_atoms="H", colbonds=atomindex) 
 ```
+
+### Similarity searching
+
+The `fmcsR` package can be use to identify similar substructures between compounds
+(i.e., "Maximum Common Substructure": MCS).  The following code loads a new SDFset of
+structures (only three), and looks for MCSs between the first two.
+
+```{r}
+## Load fmcsR package
+library(fmcsR)
+
+## Load SDFset
+data(fmcstest)
+length(fmcstest)
+
+## Search for MCS (with mismatches)
+## au and bu are the upper bonds for atom and bond matches respectively
+test <- fmcs(fmcstest[1], fmcstest[2], au=2, bu=1) 
+
+# Plot both query compounds, with MCS in color 
+plotMCS(test) 
+```
+
+### "Atom Pair" (AP) data format
+
+The "atom pair" (AP) representation that can 
+be used for structural similarity searching and clustering.
+
+```{r}
+# Create an AP representation for single compound
+ap <- sdf2ap(sdfset[[1]]) 
+
+# Create an AP representation for a set of compounds
+apset <- sdf2ap(sdfset)
+view(apset[1:4])
+```
+
+What does this format actually represent?
+
+```{r}
+## Raw format
+apset[[1]]
+
+## First 6 entries (out of 528) in "human readable" format
+head(db.explain(apset[1]))
+
+## Reminder - what does this compund look like?
+plot(sdfset[1], print=FALSE)
+```
+
+You can use the AP format to calculate the similarity of any pair of molecules:
+
+```{r}
+cmp.similarity(apset[1], apset[2])
+```
+
+### Similarity searching
+
+Search for compounds in the `apset` object that are similar to the first compound.
+
+```{r}
+## Search for compounds similar to CMP1
+cmp.search(apset, apset[1], type=3, cutoff = 0.3, quiet=TRUE) 
+```
+
+NB: for some reason the following code was giving me multiple errors when running
+with `knitr`, but it should be fine in the console.
+
+```{r, eval=FALSE}
+## Plot CMP1 and CMP96 (the one most similar to CMP1)
+## Note that I am using the SDFset format here
+plot(sdfset[c(1,96)], print=FALSE)
+
+## Identify and plot the MCS between CMP1 and CMP96
+test <- fmcs(sdfset[1], sdfset[96], au=2, bu=1) 
+plotMCS(test) 
+```
+
+### Clustering
+
+Duplicate compounds can be identified via the `cmp.duplicated`
+function.
+
+```{r}
+## Vector format
+cmp.duplicated(apset, type=1)
+
+## Data frame format
+head( cmp.duplicated(apset, type=2), 25)
+
+## Plot the pairs of identical compounds (60 & 61, 56 & 57)
+plot(sdfset[c("CMP60", "CMP61", "CMP56", "CMP57")], print=FALSE) 
+```
+
+The `cmp.cluster` function placs compounds into "similarity bins".  Compounds
+are placed in the same bin if their similraity score exceeds a threshold.
+
+```{r}
+clusters <- cmp.cluster(db=apset, cutoff = c(0.7, 0.8, 0.9), quiet = TRUE)
+clusters[1:12,]
+```
+
+```{r}
+## Are CMP48 adn CMP49 identical?
+cmp.duplicated(apset[c(48,49)], type=1)
+
+## What do they look like?
+plot(sdfset[c("CMP48", "CMP49")], print=FALSE) 
+```
+
