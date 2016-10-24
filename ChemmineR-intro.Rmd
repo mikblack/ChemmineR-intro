@@ -326,3 +326,43 @@ cmp.duplicated(apset[c(48,49)], type=1)
 plot(sdfset[c("CMP48", "CMP49")], griddim=c(1,2), print=FALSE) 
 ```
 
+### Additional types of clustering
+
+We can compute distances between the atom pair representations, and use these
+for hierarchical clustering.  The way the `cmp.cluster` function works means that 
+the distances have to be saved as an RData object, and then read back in...
+
+```{r}
+## Peform clustering, and save the distamce data as an RData object
+dummy <- cmp.cluster(db=apset, cutoff=0, save.distances="distmat.rda", quiet=TRUE) 
+```
+
+Now load the distances back into R:
+
+```{r}
+load("distmat.rda") 
+```
+
+These can be used with standard R clustering algorithms (e.g., hierarchical clustering):
+
+```{r, fig.width=8}
+## Hierarchical clustering with hclust (convert cmp.cluster distances to an 
+## R "dist" object, and use hclust to perform hierarchical clustering:
+hc <- hclust(as.dist(distmat), method="single") 
+
+## Add compound labels to hc object
+hc[["labels"]] <- cid(apset) 
+
+## Reset the plotting window for a single plot
+par(mfrow=c(1,1))
+
+## Plot the output as a dendrogram
+plot(hc, hang=-1, cex=0.5) 
+```
+
+And, of course, with hierarchical clustering comes heatmaps...
+
+```{r, fig.height=8, fig.width=8}
+heatmap(1-distmat, labCol = cid(apset), labRow = cid(apset), cexRow = 0.5, cexCol = 0.5)
+```
+
