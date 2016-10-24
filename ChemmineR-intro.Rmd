@@ -199,8 +199,14 @@ And plot them! (rings are highlighted in red).
 ```{r}
 atomindex <- as.numeric(gsub(".*_", "", unique(unlist(ringatoms))))
 atomindex
-plot(sdfset[1], print=FALSE, colbonds=atomindex) 
+plot(sdfset[1], griddim=c(1,1), print=FALSE, colbonds=atomindex) 
 ```
+
+NB: using the `griddim` parameter above allows you to specify the layout of the plot 
+(like the `mfrow` amd `mfcol` parameters in teh base `plot` command). If you don't 
+specify it, teh SDF plotting function will figure it out for you (which is cool), 
+but it also seems to remember it for next time (which isn't cool if you are plotting
+a different number of molecules).
 
 You can even plot the atoms if you want...
 ```{r}
@@ -308,11 +314,15 @@ clusters <- cmp.cluster(db=apset, cutoff = c(0.7, 0.8, 0.9), quiet = TRUE)
 clusters[1:12,]
 ```
 
+```{r, echo=FALSE}
+dev.off()
+```
+
 ```{r}
 ## Are CMP48 adn CMP49 identical?
 cmp.duplicated(apset[c(48,49)], type=1)
 
 ## What do they look like?
-plot(sdfset[c("CMP48", "CMP49")], print=FALSE) 
+plot(sdfset[c("CMP48", "CMP49")], griddim=c(1,2), print=FALSE) 
 ```
 
