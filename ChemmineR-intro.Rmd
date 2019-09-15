@@ -2,7 +2,8 @@
 title: 'ChemmineR: introductory session'
 author: "Mik Black"
 date: "25 October 2016"
-output: html_document
+output: 
+  github_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -20,11 +21,9 @@ It borrows (very) heavily from:
 The main R package used during this session is `ChemmineR`.  You can install this via:
 
 ```{r eval=FALSE}
-## Source the biocLite.R installation script
-source("http://bioconductor.org/biocLite.R") 
-
-## Use biocLite to install the package
-biocLite("ChemmineR") 
+## Install the package
+source("http://bioconductor.org/biocLite.R")
+BiocManager::install("ChemmineR")
 ```
 
 ### Additional complication(s)
@@ -32,15 +31,20 @@ biocLite("ChemmineR")
 Additional functionality can be added to the `ChemmineR` package through the OpenBabel C++ library, accessed via 
 the `ChemmineOB` R package.  This provides extra format conversion and local peptide structure viewing capabilities.
 As described in the manual, `ChemmineR` will automatically detect whether `ChemmineOB` is installed.  To get 
-OpenBabel installed on my (Mac OS) laptop, I used the v2.3.1 zip file from:
+OpenBabel installed on my (Mac OS) laptop, I used:
+
+```
+brew install open-babel
+```
+
+as per instructions at:
 
 http://openbabel.org/wiki/Category:Installation
 
 and then installed the `ChemmineOB` package via:
 
 ```{r eval=FALSE}
-source("http://bioconductor.org/biocLite.R")
-biocLite("ChemmineOB")
+BiocManager::install("ChemmineOB")
 ```
 
 For comparing compounds, and performing clustering, the `fmcsR` package is needed:
@@ -203,7 +207,7 @@ plot(sdfset[1], griddim=c(1,1), print=FALSE, colbonds=atomindex)
 ```
 
 NB: using the `griddim` parameter above allows you to specify the layout of the plot 
-(like the `mfrow` amd `mfcol` parameters in teh base `plot` command). If you don't 
+(like the `mfrow` amd `mfcol` parameters in the base `plot` command). If you don't 
 specify it, teh SDF plotting function will figure it out for you (which is cool), 
 but it also seems to remember it for next time (which isn't cool if you are plotting
 a different number of molecules).
@@ -228,7 +232,7 @@ data(fmcstest)
 length(fmcstest)
 
 ## Search for MCS (with mismatches)
-## au and bu are the upper bonds for atom and bond matches respectively
+## au and bu are the upper bounds for atom and bond matches respectively
 test <- fmcs(fmcstest[1], fmcstest[2], au=2, bu=1) 
 
 # Plot both query compounds, with MCS in color 
